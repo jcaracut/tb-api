@@ -30,7 +30,7 @@ PhoneVerification.prototype.init = function () {
  */
 PhoneVerification.prototype.verifyPhoneToken = function (phone_number, country_code, token, callback) {
 
-    console.log('in verify phone');
+    console.log('Verifying phone number: ' + phone_number);
     this._request("get", "/protected/json/phones/verification/check", {
             "api_key": this.apiKey,
             "verification_code": token,
@@ -97,4 +97,4 @@ PhoneVerification.prototype._request = function (type, path, params, callback, q
             request.get(options, callback_check);
             break;
     }
-};
+}

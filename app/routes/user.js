@@ -1,67 +1,25 @@
-var express = require('express');
-var router = express.Router();
-var multer = require('multer');
-var bodyParser = require('body-parser');
-var path = require('path');
+var router = require('express').Router();
+const passport = require('../middleware/auth');
 
+//Controllers
+var UsersController = require('../controllers/UsersController');
 
-var toMysqlFormat = require("../includes/mySQLFormat");
+router.post('/auth/login', UsersController.login);
+router.post('/register', UsersController.register);
+router.post('/generateEmailVerification', UsersController.generateEmailVerificationCode);
+router.post('/generatePhoneVerification', UsersController.generatePhoneVerificationCode);
+router.post('/verifyPhone', UsersController.verifyPhoneToken);
+router.post('/uploadID', UsersController.uploadID);
+router.post('/updateUserIDPicture', passport.auth, UsersController.updateUserIDPicture);
+router.post('/updateUserAvatar', passport.auth, UsersController.uploadAvatar);
+router.post('/updateUserProfile', passport.auth, UsersController.updateUserProfile);
+router.post('/sendMessageToAdmin', passport.auth, UsersController.sendMessageToAdmin);
+router.post('/updateUserVaultBalance', passport.auth, UsersController.updateUserVaultBalance);
 
-var connection = require("../db/db_bunny.js");
-var userService = require('../auth/user.service');
-
-// router.post('/post', userService.verifyToken, (req, res) => {
-// 	var authUser = jwt.verify(req.token, 'bunneykey');
-// 	res.send({ authUser: authUser });
-// });
-
-
-var uploadConfig = multer({
-	storage: multer.diskStorage({
-		destination: function (req, file, callback) { callback(null, '../assets/ids'); },
-		filename: function (req, file, callback) { callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); }
-
-	}),
-
-	fileFilter: function (req, file, callback) {
-		var ext = path.extname(file.originalname)
-		if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-			return callback(/*res.end('Only images are allowed')*/ null, false)
-		}
-		callback(null, true)
-	}
-});
-
-var uploadImage = uploadConfig.single('id');
-
-router.post('/upload', (req, res) => {
-	uploadImage(req, res, function (err) {
-		if (err instanceof multer.MulterError) {
-			res.json({ message: "A Multer error occurred when uploading." });
-		} else if (err) {
-			res.json({ message: "An unknown error occurred when uploading." });
-		}
-		console.log("req.body"); //form fields
-		console.log(req.body);
-		console.log("req.file");
-		// var idImage = base64_encode(path.join(__dirname + '/public/uploads/' + req.file.filename));
-
-		if (!req.body && !req.files) {
-			res.json({ success: false });
-		} else {
-			res.json({ success: true });
-		}
-	});
-});
-
-function base64_encode(file) {
-	// read binary data
-	var bitmap = fs.readFileSync(file);
-	// convert binary data to base64 encoded string
-	return new Buffer(bitmap).toString('base64');
-}
-
-
-
+router.get('/verifyEmail', UsersController.verifyEmail);
+router.get("/getVaultInfo", passport.auth, UsersController.getVaultInfo);
+router.get("/getLoggedInUser", passport.auth, UsersController.getLoggedInUser);
+router.get("/setupPassword", passport.auth, UsersController.setupPassword); 
+router.get("/getNotifications", passport.auth, UsersController.getNotifications);
 
 module.exports = router;

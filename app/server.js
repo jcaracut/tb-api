@@ -1,50 +1,43 @@
 'use strict';
-var express = require('express');
-var app = express();
-var passport = require('passport');
-var cors = require('cors');
-var session = require("express-session");
-var bodyParser = require("body-parser");
+//Import .env configurations
+require('dotenv').config();
 
-var toMysqlFormat = require("./includes/mySQLFormat");
+const PORT = process.env.PORT || 8080;
 
-//Including Routes
-var users = require("./routes/user")
-var api = require("./routes/api")
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const bodyParser = require("body-parser");
+const connection = require("./db/db_bunny.js");
 
-app.use(express.static("public"));
-app.use(session({ secret: "cats" }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(passport.initialize());
-app.use(passport.session());
+const passport = require('passport');
+const passportJWT = require("passport-jwt");
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 
-app.use('/', api); 
-app.use('/user', users); 
-
-var corsOptions = {
-	origin: '*',
-	optionsSuccessStatus: 200
+const opts = {
+	jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+	secretOrKey: process.env.SECRET
 };
 
-app.use(cors(corsOptions));
+const strategy = new JWTStrategy(opts, (jwtPayload, next) => {
+		connection.query("SELECT * FROM tbl_user WHERE user_id=?", [jwtPayload.user_id], function (err, user) {
+			console.log(user[0])
+			next(null, user[0])
+		});
+	}
+)
 
-app.listen(8000, () => {
-	console.log('Server running on port 8000');
+passport.use(strategy);
+app.use(express.static("public"));
+app.use(bodyParser.json({limit: '2mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '2mb', extended: true}))
+app.use(cors());
+
+app.use('/api/v1', require('./routes/Route'));
+
+app.listen(PORT, () => {
+	console.log('Server running on port ' + PORT);
 });
 
-app.get('/', (req, res) => {
-	res.send("Hello World!");
-});
-
-app.get('/verify', (req, res) => {
-	console.log(req.query.token);
-	res.send("You are Verified!");
-});
-
-app.get('/test', (req, res) => {
-	res.writeHead(200, {
-		'Set-Cookie':'sesh=wakadoo; expires='+new Date(new Date().getTime()+86409000).toUTCString()
-	});
-
-	res.send("test");
-});
+module.exports = app;
