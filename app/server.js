@@ -36,6 +36,10 @@ app.use(cors());
 
 app.use('/api/v1', require('./routes/Route'));
 
+app.get('/', function(req, res) {
+	res.send("Hello Goal!");
+});
+
 app.listen(PORT, () => {
 	console.log('Server running on port ' + PORT);
 });
