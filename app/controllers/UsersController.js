@@ -6,7 +6,6 @@ const phoneVerification = verification(process.env.AUTHY_API_KEY, process.env.AU
 const toMysqlFormat = require("../includes/mySQLFormat");
 const connection = require("../db/db_bunny");
 const jwt = require('jsonwebtoken');
-const bcrypt = require("bcrypt")
 const md5 = require("md5")
 
 
@@ -124,28 +123,6 @@ const UsersController = {
                         })
                     }
                 });
-            }
-        });
-    },
-    setupPassword: function (req, res) {
-        var userID = req.user.user_id;
-        var password = req.body.password1;
-
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, (err, hash) => {
-                if (err) throw err;
-                password = hash;
-            });
-        });
-
-        const updateUserPassword = "UPDATE tbl_user SET password=? WHERE user_id=?;"
-
-        connection.query(updateUserPassword, [password, userID], (err, user) => {
-            if (err) throw err;
-            if (user.affectedRows === 1) {
-                res.json({ message: "success", success: true });
-            } else {
-                res.status(500).json({ success: false });
             }
         });
     },
