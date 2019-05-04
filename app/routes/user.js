@@ -19,7 +19,6 @@ router.post('/updateUserVaultBalance', passport.auth, UsersController.updateUser
 router.get('/verifyEmail', UsersController.verifyEmail);
 router.get("/getVaultInfo", passport.auth, UsersController.getVaultInfo);
 router.get("/getLoggedInUser", passport.auth, UsersController.getLoggedInUser);
-router.get("/setupPassword", passport.auth, UsersController.setupPassword); 
 router.get("/getNotifications", passport.auth, UsersController.getNotifications);
 
 module.exports = router;
