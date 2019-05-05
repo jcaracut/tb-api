@@ -3,10 +3,11 @@
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
-
+const cors = require('cors');
 const express = require('express');
 const app = express();
-const cors = require('cors');
+app.use(cors());
+
 const bodyParser = require("body-parser");
 const connection = require("./db/db_bunny.js");
 
@@ -29,13 +30,7 @@ const strategy = new JWTStrategy(opts, (jwtPayload, next) => {
 })
 
 passport.use(strategy);
-app.use(cors());
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Authorization, Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-    next();
-});
+
 app.use(express.static("public"));
 app.use(bodyParser.json({ limit: '2mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
