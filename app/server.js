@@ -21,22 +21,29 @@ const opts = {
 };
 
 const strategy = new JWTStrategy(opts, (jwtPayload, next) => {
-		connection.query("SELECT * FROM tbl_user WHERE user_id=?", [jwtPayload.user_id], function (err, user) {
-			console.log(user[0])
-			next(null, user[0])
-		});
-	}
+	connection.query("SELECT * FROM tbl_user WHERE user_id=?", [jwtPayload.user_id], function (err, user) {
+		console.log(user[0])
+		next(null, user[0])
+	});
+}
 )
 
 passport.use(strategy);
+
+app.use(function (req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
+
 app.use(express.static("public"));
-app.use(bodyParser.json({limit: '2mb', extended: true}))
-app.use(bodyParser.urlencoded({limit: '2mb', extended: true}))
+app.use(bodyParser.json({ limit: '2mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
 app.use(cors());
 
 app.use('/api/v1', require('./routes/Route'));
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 	res.send("Hello Goal!");
 });
 
