@@ -15,12 +15,9 @@ const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
-// app.use(cors({
-// 	credentials: 'true',
-// 	origin: '*',
-// 	methods: 'GET, POST, PUT, DELETE, OPTIONS',
-// 	allowedHeaders: 'Authorization, Access-Control-Allow-Headers, Origin,X-Requested-With,Content-Type,Accept,content-type,application/json'
-// }));
+app.use(cors({
+	origin: 'https://bunney-api.herokuapp.com/'
+}));
 
 app.use(express.static("public"));
 app.use(bodyParser.json({ limit: '2mb', extended: true }))
