@@ -15,14 +15,7 @@ const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Authorization, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
-    next();
-});
-
-// app.use(cors());
+app.use(cors());
 app.use(express.static("public"));
 app.use(bodyParser.json({ limit: '2mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
