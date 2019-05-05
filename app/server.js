@@ -4,9 +4,9 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
 
+const cors = require('cors');
 const express = require('express');
 const app = express();
-const cors = require('cors');
 const bodyParser = require("body-parser");
 const connection = require("./db/db_bunny.js");
 
