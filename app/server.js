@@ -3,9 +3,10 @@
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
-const cors = require('cors');
+
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const bodyParser = require("body-parser");
 const connection = require("./db/db_bunny.js");
 
@@ -14,6 +15,16 @@ const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
+app.use(cors({
+	credentials: 'true',
+	origin: '*',
+	methods: 'GET, POST, PUT, DELETE, OPTIONS',
+	allowedHeaders: 'Authorization, Access-Control-Allow-Headers, Origin,X-Requested-With,Content-Type,Accept,content-type,application/json'
+}));
+
+app.use(express.static("public"));
+app.use(bodyParser.json({ limit: '2mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
 
 const opts = {
 	jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
@@ -28,15 +39,6 @@ const strategy = new JWTStrategy(opts, (jwtPayload, next) => {
 })
 
 passport.use(strategy);
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
-    next();
-});
-app.use(express.static("public"));
-app.use(bodyParser.json({ limit: '2mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
 
 app.use('/api/v1', require('./routes/Route'));
 
