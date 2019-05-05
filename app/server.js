@@ -15,6 +15,13 @@ const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 
+
+
+app.use(cors());
+app.use(express.static("public"));
+app.use(bodyParser.json({ limit: '2mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
+
 const opts = {
 	jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
 	secretOrKey: process.env.SECRET
@@ -25,21 +32,9 @@ const strategy = new JWTStrategy(opts, (jwtPayload, next) => {
 		console.log(user[0])
 		next(null, user[0])
 	});
-}
-)
+})
 
 passport.use(strategy);
-
-app.use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
-
-app.use(express.static("public"));
-app.use(bodyParser.json({ limit: '2mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
-app.use(cors());
 
 app.use('/api/v1', require('./routes/Route'));
 
