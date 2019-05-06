@@ -102,7 +102,6 @@ var AdminsController = {
     banUser: (req, res) => {
         var user_id = req.body.user_id;
         var cause = req.body.cause;
-        console.log(req.body)
         var deleteUser = "UPDATE tbl_user SET is_banned=1 WHERE user_id=?;";
 
         connection.query(deleteUser, [user_id], (err, users) => {
@@ -163,18 +162,6 @@ var AdminsController = {
             }
         });
     },
-    getTotalMonthlyInvestedMoney: (req, res) => {
-        var getTotalMonthlyInvestedMoney = "SELECT * FROM table WHERE MONTH(columnName) = MONTH(CURRENT_DATE()) AND YEAR(columnName) = YEAR(CURRENT_DATE())"
-    },
-    getTotalDailyInvestedMoney: (req, res) => {
-
-    },
-    getTotalAnualInvestedMoney: (req, res) => {
-
-    },
-    notifyUserForPayment: (req, res) => {
-
-    },
     openNewCycle: (req, res) => {
         var date_from = toMysqlFormat(new Date(req.body.date_from));
         var date_to = toMysqlFormat(new Date(req.body.date_to));
@@ -221,12 +208,12 @@ var AdminsController = {
         var cycle_id = req.body.cycle_id;
         var date_from = toMysqlFormat(new Date(req.body.date_from));
         var date_to = toMysqlFormat(new Date(req.body.date_to));
-
-        var updateCycle = "UPDATE `tbl_cycle` SET `date_from`=?,`date_to`=? WHERE `cycle_id`=?"
+    
+        var updateCycle = "UPDATE tbl_cycle SET date_from=?, date_to=? WHERE cycle_id=?"
         connection.query(updateCycle, [date_from, date_to, cycle_id], (err, cycles) => {
             if (err) res.status(500).json(err)
             if (cycles.affectedRows > 0) {
-                res.json({ message: "Cycle has been udpated.", success: true });
+                res.json({ message: "Cycle has been updated.", success: true });
             } else {
                 res.status(500).json({ success: false, message: "Cannot update cycle." });
             }
@@ -245,7 +232,6 @@ var AdminsController = {
         });
     },
     updateInvestment: (req, res) => {
-        console.log(req.body)
         var investment_id = req.body.id;
         var user_id = req.body.user_id;
         var status = req.body.status;

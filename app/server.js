@@ -4,9 +4,10 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 8080;
 
-const cors = require('cors');
 const express = require('express');
 const app = express();
+const cors = require('cors');
+app.use(cors());
 const bodyParser = require("body-parser");
 const connection = require("./db/db_bunny.js");
 
@@ -14,12 +15,6 @@ const passport = require('passport');
 const passportJWT = require("passport-jwt");
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-
-app.use(cors());
-
-app.use(express.static("public"));
-app.use(bodyParser.json({ limit: '2mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
 
 const opts = {
 	jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
@@ -33,13 +28,13 @@ const strategy = new JWTStrategy(opts, (jwtPayload, next) => {
 	});
 })
 
+app.use(express.static("public"));
+app.use(bodyParser.json({ limit: '2mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }))
+
 passport.use(strategy);
 
 app.use('/api/v1', require('./routes/Route'));
-
-app.get('/', function (req, res) {
-	res.send("Hello Goal!");
-});
 
 app.listen(PORT, () => {
 	console.log('Server running on port ' + PORT);

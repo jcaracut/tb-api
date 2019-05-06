@@ -16,6 +16,7 @@ router.post('/updateUserProfile', passport.auth, UsersController.updateUserProfi
 router.post('/sendMessageToAdmin', passport.auth, UsersController.sendMessageToAdmin);
 router.post('/updateUserVaultBalance', passport.auth, UsersController.updateUserVaultBalance);
 
+
 router.get('/verifyEmail', UsersController.verifyEmail);
 router.get("/getVaultInfo", passport.auth, UsersController.getVaultInfo);
 router.get("/getLoggedInUser", passport.auth, UsersController.getLoggedInUser);

@@ -40,7 +40,7 @@ const UsersController = {
                         };
 
                         var token = jwt.sign(user, process.env.SECRET, {
-                            expiresIn: 3600 * 24 // 24 hr
+                            expiresIn: 86400 // 24 hr
                         });
                         user.verification = 1;
                         req.user = user;
@@ -293,9 +293,9 @@ const UsersController = {
         connection.query(updateUserIDPicturePath, [image, user_id], (err, user) => {
             if (err) res.status(500).json(err)
             if (user.affectedRows === 1) {
-                res.json({ success: true });
+                res.json({ message: "ID picture has been uploaded!", success: true });
             } else {
-                res.json({ success: false });
+                res.status(500).json({ message: "Cannot update ID picture.", success: false });
             }
         });
     },
