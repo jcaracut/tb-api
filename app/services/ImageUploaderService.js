@@ -7,7 +7,7 @@ var connection = require("../db/db_bunny");
 aws.config.update({
 	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-	region: 'us-east-1'
+	region: 'us-east-2'
 });
 
 var s3 = new aws.S3();
@@ -41,6 +41,7 @@ var uploadFarm = multer({
 		key: function (req, file, cb) {
 			var filename = file.originalname;
 			var fullPath = "assets/uploads/images/farms/image/" + filename;
+			console.log(fullPath)
 			cb(null, fullPath);
 		}
 	}),

@@ -161,7 +161,6 @@ CREATE TABLE `tbl_farm_expenses` (
   `farm_expenses_id` int(11) NOT NULL,
   `item` varchar(255) DEFAULT NULL,
   `amount` double NOT NULL,
-  `description` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL,
   `farm_id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,

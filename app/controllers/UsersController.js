@@ -156,7 +156,7 @@ const UsersController = {
         var phone_number = req.body.phoneNumber;
         var country_code = 63;
         var token = req.body.token;
-        var updateUserActive = "UPDATE tbl_user as U, tbl_user_profile as UP SET U.is_active=? WHERE UP.mobile=? and U.user_id = UP.user_id"
+        var updateUserActive = "UPDATE tbl_user as U, tbl_user_profile as UP SET U.is_active=? WHERE UP.mobile=? and U.user_id=UP.user_id;"
         var removeUserRegistration = "UPDATE tbl_registration SET is_active=? WHERE mobile=?;";
 
         if (phone_number && country_code && token) {
@@ -167,7 +167,6 @@ const UsersController = {
                 } else {
                     console.log('Phone Confirmation Success: ', response);
                     if (response.success) {
-
                         connection.query(updateUserActive, [1, phone_number], (err, user) => {
                             if (err) res.status(500).json({ success: false });
                             console.log(user)
