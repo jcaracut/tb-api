@@ -149,7 +149,6 @@ const BreedersController = {
         var farm_id = req.body.farm_id;
         var image = req.body.image
         var is_active = 1;
-        console.log(req.body)
 
         const insertFarmExpenses = "INSERT INTO tbl_farm_expenses(item, amount, date_added, farm_id, image, is_active) VALUES (?, ?, ?, ?, ?, ?)"
 

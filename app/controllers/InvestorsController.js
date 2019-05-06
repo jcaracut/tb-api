@@ -24,7 +24,7 @@ var InvestorsController = {
     getListOfInvestedRabbits: (req, res) => {
         var user_id = req.user.user_id;
         var farm_id = req.query.farm_id
-        const selectInvestedRabbit = "SELECT A.amount, A.number_of_rabbits, R.* FROM tbl_active_investment as A, tbl_rabbit as R WHERE A.user_id=? and A.farm_id=? and R.farm_id=?"
+        const selectInvestedRabbit = "SELECT A.amount, A.number_of_rabbits, R.* FROM tbl_active_investment as A, tbl_rabbit as R WHERE A.user_id=? and A.farm_id=? and R.farm_id=? and A.breed_type=R.breed_type"
 
         connection.query(selectInvestedRabbit, [user_id, farm_id, farm_id], (err, rabbits) => {
             if (err) res.status(500).json({ err: err });
